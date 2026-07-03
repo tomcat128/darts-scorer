@@ -68,6 +68,12 @@ export class X01Board {
     return this.matchStore.lastTurnEventsFor(playerId).map((e) => e.dart);
   }
 
+  /** Total darts thrown by this player so far in the current leg (not reset per turn). */
+  dartsThrownInLegFor(playerId: string): number {
+    const currentLeg = this.matchStore.currentLegIndex();
+    return this.matchStore.eventHistory().filter((e) => e.playerId === playerId && e.legIndex === currentLeg).length;
+  }
+
   /** Always 3 slots, padded with null so the layout doesn't jump as darts are thrown. */
   dartSlotsFor(playerId: string): (Dart | null)[] {
     const darts = this.lastTurnDartsFor(playerId);
