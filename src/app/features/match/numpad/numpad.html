@@ -1,0 +1,25 @@
+<div class="numpad">
+  <mat-button-toggle-group class="multiplier-group" [value]="multiplier()" (change)="setMultiplier($event.value)">
+    <mat-button-toggle [value]="1">Single</mat-button-toggle>
+    <mat-button-toggle [value]="2">Double</mat-button-toggle>
+    <mat-button-toggle [value]="3">Triple</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <div class="number-grid">
+    @for (n of numbers; track n) {
+      <button class="num-button" (click)="throwNumber(n)">{{ n }}</button>
+    }
+  </div>
+
+  <div class="special-row">
+    <button class="num-button bull-button" [disabled]="multiplier() === 3" (click)="throwBull()">Bull</button>
+    <button class="num-button miss-button" (click)="throwMiss()">Daneben</button>
+  </div>
+
+  <div class="undo-row">
+    <button matButton (click)="undo()">
+      <mat-icon>undo</mat-icon>
+      Undo Dart
+    </button>
+  </div>
+</div>

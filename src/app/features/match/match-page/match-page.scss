@@ -1,0 +1,37 @@
+:host {
+  // <app-match-page> is inserted by the Router as a flex item of .app-content
+  // (see app.scss); it must opt itself into shrinking to the available space so the
+  // numpad below stays pinned instead of being pushed past the viewport.
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.match-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  app-x01-board,
+  app-cricket-board,
+  app-atc-board {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  app-numpad {
+    flex: 0 0 auto;
+  }
+}
+
+.leg-indicator {
+  flex: 0 0 auto;
+  padding: 6px 12px 0;
+  font-weight: 700;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}

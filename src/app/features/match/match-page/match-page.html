@@ -1,0 +1,24 @@
+<div class="match-page">
+  <div class="leg-indicator">
+    Leg {{ matchStore.currentLegIndex() + 1 }}
+    @if (useSets()) {
+      · Set {{ currentSetIndex() }}
+    }
+  </div>
+
+  @switch (matchStore.activeMatch()?.gameConfig?.mode) {
+    @case ('x01') {
+      <app-x01-board />
+    }
+    @case ('cricket') {
+      <app-cricket-board />
+    }
+    @case ('atc') {
+      <app-atc-board />
+    }
+  }
+
+  @if (!matchStore.isMatchComplete()) {
+    <app-numpad />
+  }
+</div>

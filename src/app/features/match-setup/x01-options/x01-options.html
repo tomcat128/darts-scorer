@@ -1,0 +1,40 @@
+<div class="x01-options">
+  <div class="option-row">
+    <span class="option-label">Startpunktzahl</span>
+    <mat-button-toggle-group [value]="preset()" (change)="selectPreset($event.value)">
+      <mat-button-toggle value="501">501</mat-button-toggle>
+      <mat-button-toggle value="301">301</mat-button-toggle>
+      <mat-button-toggle value="custom">Eigene</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  @if (preset() === 'custom') {
+    <mat-form-field appearance="outline" class="custom-score-field">
+      <mat-label>Punktzahl</mat-label>
+      <input
+        matInput
+        type="number"
+        [value]="config().startingScore"
+        (change)="setCustomScore($any($event.target).value)"
+      />
+    </mat-form-field>
+  }
+
+  <div class="option-row">
+    <span class="option-label">Checkin</span>
+    <mat-button-toggle-group [value]="config().checkinMode" (change)="setCheckinMode($event.value)">
+      <mat-button-toggle value="normal">Normal</mat-button-toggle>
+      <mat-button-toggle value="double">Double In</mat-button-toggle>
+      <mat-button-toggle value="master">Master In</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="option-row">
+    <span class="option-label">Checkout</span>
+    <mat-button-toggle-group [value]="config().checkoutMode" (change)="setCheckoutMode($event.value)">
+      <mat-button-toggle value="normal">Normal</mat-button-toggle>
+      <mat-button-toggle value="double">Double Out</mat-button-toggle>
+      <mat-button-toggle value="master">Master Out</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+</div>

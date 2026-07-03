@@ -1,0 +1,28 @@
+.roster-page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty-hint {
+  opacity: 0.6;
+  padding: 0 16px;
+}
+
+.add-player {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  .name-field {
+    flex: 1;
+  }
+}
+
+.start-button {
+  min-height: 56px;
+  font-size: 1.1rem;
+}

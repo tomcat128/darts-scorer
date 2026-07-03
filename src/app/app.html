@@ -1,0 +1,13 @@
+<div class="app-shell">
+  <div class="top-bar">
+    <mat-icon>{{ theme.isDark() ? 'dark_mode' : 'light_mode' }}</mat-icon>
+    <mat-slide-toggle
+      [checked]="theme.isDark()"
+      (change)="theme.toggle()"
+      aria-label="Dark Mode umschalten"
+    />
+  </div>
+  <div class="app-content">
+    <router-outlet />
+  </div>
+</div>

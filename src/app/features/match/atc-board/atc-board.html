@@ -1,0 +1,32 @@
+<div class="atc-board">
+  @for (player of players(); track player.id) {
+    <div class="player-tile" [class.active]="player.id === matchStore.currentPlayerId()">
+      <div class="tile-header">
+        <span class="player-name">{{ player.name }}</span>
+        <span class="legs-sets">
+          @if (useSets()) {
+            <span>{{ matchStore.setsWonByPlayer()[player.id] ?? 0 }} Sets</span>
+          }
+          <span>{{ matchStore.legsWonByPlayer()[player.id] ?? 0 }} Legs</span>
+        </span>
+      </div>
+
+      <div class="tile-body">
+        <div class="player-target">{{ targetLabel(player.id) }}</div>
+        @if (lastTurnDartsFor(player.id).length > 0) {
+          <div class="thrown-darts">
+            @for (dart of lastTurnDartsFor(player.id); track $index) {
+              <span class="dart-chip">{{ dartLabel(dart) }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="progress-track">
+        @for (step of progression; track $index) {
+          <span class="step" [class.done]="isDone(player.id, $index)"></span>
+        }
+      </div>
+    </div>
+  }
+</div>

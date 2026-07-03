@@ -1,0 +1,77 @@
+.atc-board {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+
+.player-tile {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--mat-sys-surface-container);
+
+  &.active {
+    outline: 2px solid var(--mat-sys-primary);
+    background: var(--mat-sys-primary-container);
+  }
+}
+
+.tile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.legs-sets {
+  display: flex;
+  gap: 10px;
+}
+
+.tile-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.player-target {
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.thrown-darts {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.dart-chip {
+  background: var(--mat-sys-surface-container-high);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-weight: 600;
+}
+
+.progress-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 8px;
+}
+
+.step {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mat-sys-outline-variant);
+
+  &.done {
+    background: var(--mat-sys-primary);
+  }
+}

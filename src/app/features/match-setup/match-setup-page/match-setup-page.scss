@@ -1,0 +1,71 @@
+.match-setup-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+h3 {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.player-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.order-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.empty-hint {
+  opacity: 0.6;
+  font-size: 0.85rem;
+}
+
+.start-button {
+  min-height: 56px;
+  font-size: 1.1rem;
+}

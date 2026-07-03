@@ -1,0 +1,60 @@
+<div class="cricket-board">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        @for (player of players(); track player.id) {
+          <th [class.active]="player.id === matchStore.currentPlayerId()">{{ player.name }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (n of numbers; track n) {
+        <tr>
+          <td class="number-label">{{ numberLabel(n) }}</td>
+          @for (player of players(); track player.id) {
+            <td class="marks" [class.active]="player.id === matchStore.currentPlayerId()">
+              {{ marksSymbol(player.id, n) }}
+            </td>
+          }
+        </tr>
+      }
+      <tr class="points-row">
+        <td class="number-label">Punkte</td>
+        @for (player of players(); track player.id) {
+          <td class="points" [class.active]="player.id === matchStore.currentPlayerId()">
+            {{ displayFor(player.id).points }}
+          </td>
+        }
+      </tr>
+      <tr class="tally-row">
+        <td class="number-label">Legs</td>
+        @for (player of players(); track player.id) {
+          <td [class.active]="player.id === matchStore.currentPlayerId()">
+            {{ matchStore.legsWonByPlayer()[player.id] ?? 0 }}
+          </td>
+        }
+      </tr>
+      @if (useSets()) {
+        <tr class="tally-row">
+          <td class="number-label">Sets</td>
+          @for (player of players(); track player.id) {
+            <td [class.active]="player.id === matchStore.currentPlayerId()">
+              {{ matchStore.setsWonByPlayer()[player.id] ?? 0 }}
+            </td>
+          }
+        </tr>
+      }
+      <tr class="darts-row">
+        <td class="number-label">Würfe</td>
+        @for (player of players(); track player.id) {
+          <td [class.active]="player.id === matchStore.currentPlayerId()">
+            @for (dart of lastTurnDartsFor(player.id); track $index) {
+              <span class="dart-chip">{{ dartLabel(dart) }}</span>
+            }
+          </td>
+        }
+      </tr>
+    </tbody>
+  </table>
+</div>

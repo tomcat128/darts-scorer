@@ -1,0 +1,33 @@
+<div class="roster-page">
+  <h1>Spieler</h1>
+
+  <mat-list>
+    @for (player of roster.players(); track player.id) {
+      <mat-list-item>
+        {{ player.name }}
+        <button matIconButton matListItemMeta (click)="deletePlayer(player.id)" aria-label="Spieler löschen">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-list-item>
+    } @empty {
+      <p class="empty-hint">Noch keine Spieler angelegt.</p>
+    }
+  </mat-list>
+
+  <div class="add-player">
+    <mat-form-field appearance="outline" class="name-field">
+      <mat-label>Neuer Spieler</mat-label>
+      <input matInput #nameInput (keyup.enter)="addPlayer(nameInput)" />
+    </mat-form-field>
+    <button matButton="filled" (click)="addPlayer(nameInput)">Hinzufügen</button>
+  </div>
+
+  <button
+    matButton="filled"
+    class="start-button"
+    [disabled]="roster.players().length === 0"
+    (click)="goToNewMatch()"
+  >
+    Neue Partie
+  </button>
+</div>

@@ -1,0 +1,55 @@
+.cricket-board {
+  padding: 12px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+th,
+td {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+th.active,
+td.active {
+  background: var(--mat-sys-primary-container);
+}
+
+.number-label {
+  text-align: left;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.marks {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.points-row .points {
+  font-weight: 700;
+}
+
+.tally-row td:not(.number-label) {
+  font-weight: 600;
+}
+
+.darts-row td:not(.number-label) {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.dart-chip {
+  background: var(--mat-sys-surface-container-high);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}

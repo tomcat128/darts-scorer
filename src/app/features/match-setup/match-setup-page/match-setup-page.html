@@ -1,0 +1,72 @@
+<div class="match-setup-page">
+  <h1>Neue Partie</h1>
+
+  <section>
+    <h2>Spieler</h2>
+
+    <div class="player-section">
+      <h3>Verfügbar</h3>
+      <mat-list>
+        @for (player of availablePlayers(); track player.id) {
+          <mat-list-item (click)="addToMatch(player.id)" class="clickable">
+            {{ player.name }}
+            <mat-icon matListItemMeta>add</mat-icon>
+          </mat-list-item>
+        } @empty {
+          <p class="empty-hint">Keine weiteren Spieler.</p>
+        }
+      </mat-list>
+    </div>
+
+    <div class="player-section">
+      <h3>Reihenfolge (Leg 1)</h3>
+      <div class="order-list">
+        @for (player of selectedPlayers(); track player.id; let i = $index) {
+          <div class="order-row">
+            <span class="order-name">{{ i + 1 }}. {{ player.name }}</span>
+            <span class="order-actions">
+              <button matIconButton (click)="moveUp(i)" [disabled]="i === 0" aria-label="Nach oben">
+                <mat-icon>arrow_upward</mat-icon>
+              </button>
+              <button
+                matIconButton
+                (click)="moveDown(i)"
+                [disabled]="i === selectedPlayers().length - 1"
+                aria-label="Nach unten"
+              >
+                <mat-icon>arrow_downward</mat-icon>
+              </button>
+              <button matIconButton (click)="removeFromMatch(player.id)" aria-label="Entfernen">
+                <mat-icon>close</mat-icon>
+              </button>
+            </span>
+          </div>
+        } @empty {
+          <p class="empty-hint">Noch keine Spieler ausgewählt.</p>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Spielmodus</h2>
+    <mat-button-toggle-group [value]="mode()" (change)="setMode($event.value)">
+      <mat-button-toggle value="x01">X01</mat-button-toggle>
+      <mat-button-toggle value="cricket">Cricket</mat-button-toggle>
+      <mat-button-toggle value="atc">Around the Clock</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    @if (mode() === 'x01') {
+      <app-x01-options [config]="x01Config()" (configChange)="x01Config.set($event)" />
+    }
+  </section>
+
+  <section>
+    <h2>Format</h2>
+    <app-match-format [selection]="formatSelection()" (selectionChange)="formatSelection.set($event)" />
+  </section>
+
+  <button matButton="filled" class="start-button" [disabled]="!canStart()" (click)="startMatch()">
+    Partie starten
+  </button>
+</div>

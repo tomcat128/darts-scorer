@@ -1,0 +1,40 @@
+<div class="x01-board">
+  @for (player of players(); track player.id) {
+    <div
+      class="player-tile"
+      [class.active]="player.id === matchStore.currentPlayerId()"
+      [class.bust-flash]="player.id === flashingPlayerId()"
+    >
+      <div class="tile-columns">
+        <div class="col-left">
+          <div class="player-name">{{ player.name }}</div>
+          <div class="remaining">{{ displayFor(player.id).remaining }}</div>
+          <div class="dart-count">Dart {{ lastTurnDartsFor(player.id).length }}/3</div>
+        </div>
+
+        <div class="col-mid">
+          <div class="thrown-darts">
+            @for (dart of dartSlotsFor(player.id); track $index) {
+              <span class="dart-chip" [class.empty]="dart === null">{{ dart ? dartLabel(dart) : '–' }}</span>
+            }
+          </div>
+          <div class="turn-total">{{ turnTotalFor(player.id) }}</div>
+        </div>
+
+        <div class="col-right">
+          <div>{{ matchStore.legsWonByPlayer()[player.id] ?? 0 }} Legs</div>
+          @if (useSets()) {
+            <div>{{ matchStore.setsWonByPlayer()[player.id] ?? 0 }} Sets</div>
+          }
+          <div>Ø {{ averageFor(player.id) | number: '1.0-1' }}</div>
+        </div>
+      </div>
+
+      @if (!displayFor(player.id).checkedIn) {
+        <div class="checkin-hint">Noch nicht eingecheckt</div>
+      } @else if (checkoutLabelFor(player.id); as checkout) {
+        <div class="checkout-hint">{{ checkout }}</div>
+      }
+    </div>
+  }
+</div>
