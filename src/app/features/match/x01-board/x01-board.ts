@@ -54,6 +54,16 @@ export class X01Board {
               this.flashingPlayerId.set(null);
             }
           }, BUST_FLASH_DURATION_MS);
+        } else if (this.matchStore.currentTurnDarts().length === 0) {
+          // Turn just ended (3rd dart, or an early checkout) - announce what was scored.
+          const finishedTurnEvents = events.filter(
+            (e) => e.playerId === lastEvent.playerId && e.turnIndex === lastEvent.turnIndex,
+          );
+          const total = finishedTurnEvents.reduce((sum, e) => {
+            const scored = Number(e.description);
+            return sum + (Number.isFinite(scored) ? scored : 0);
+          }, 0);
+          this.sound.announceScore(total);
         }
       }
       this.lastSeenEventCount = events.length;

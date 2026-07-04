@@ -19,4 +19,14 @@ export class SoundService {
     audio.currentTime = 0;
     void audio.play();
   }
+
+  announceScore(total: number): void {
+    if (typeof window === 'undefined' || !window.speechSynthesis) {
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(String(total));
+    utterance.lang = 'en-US';
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  }
 }
