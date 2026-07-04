@@ -1,10 +1,5 @@
 <div class="app-shell">
   <div class="top-bar">
-    @if (matchStore.hasActiveMatch()) {
-      <button matIconButton (click)="confirmEndMatch()" aria-label="Spiel beenden">
-        <mat-icon>close</mat-icon>
-      </button>
-    }
     <div class="theme-toggle">
       <mat-icon>{{ theme.isDark() ? 'dark_mode' : 'light_mode' }}</mat-icon>
       <mat-slide-toggle
@@ -13,6 +8,11 @@
         aria-label="Dark Mode umschalten"
       />
     </div>
+    @if (matchStore.hasActiveMatch()) {
+      <button matIconButton (click)="confirmEndMatch()" aria-label="Spiel beenden">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
   </div>
   <div class="app-content">
     <router-outlet />

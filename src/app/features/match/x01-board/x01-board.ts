@@ -93,7 +93,12 @@ export class X01Board {
     if (own.length === 0) {
       return 0;
     }
-    const total = own.reduce((sum, e) => sum + dartValue(e.dart), 0);
+    // A bust (or a dart thrown before checking in) scores 0, not the dart's face value -
+    // `description` holds the actual scored amount ('BUST' / not-checked-in aren't numeric).
+    const total = own.reduce((sum, e) => {
+      const scored = Number(e.description);
+      return sum + (Number.isFinite(scored) ? scored : 0);
+    }, 0);
     return (total / own.length) * 3;
   }
 

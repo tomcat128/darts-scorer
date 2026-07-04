@@ -25,7 +25,6 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-left: auto;
 }
 
 .app-content {
@@ -50,7 +49,7 @@
 // some devices (e.g. iPhone 17) and can end up clipped or hard to reach there. Move it to
 // the bottom instead, as a floating overlay confined to the left (player-card) column so it
 // never reserves space across the numpad column on the match page (see match-page.scss) -
-// the end-match button sits flush left and dark-mode flush right within that column.
+// dark-mode sits flush left and the end-match button flush right within that column.
 @media (orientation: landscape) {
   .top-bar {
     position: fixed;

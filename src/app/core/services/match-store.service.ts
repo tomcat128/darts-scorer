@@ -42,6 +42,11 @@ export class MatchStoreService {
 
   /** Darts of the player's current (in-progress) or most recently completed turn, whichever is later. */
   lastTurnEventsFor(playerId: string): TurnEvent[] {
+    // It's this player's turn again but they haven't thrown yet - clear their previous
+    // turn's darts immediately instead of leaving them displayed until the first new dart.
+    if (playerId === this.currentPlayerId() && this.currentTurnDarts().length === 0) {
+      return [];
+    }
     const ownEvents = this.eventHistory().filter((e) => e.playerId === playerId);
     if (ownEvents.length === 0) {
       return [];

@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -7,11 +7,18 @@ import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PlayerRosterService } from '../../../core/services/player-roster.service';
 import { MatchStoreService } from '../../../core/services/match-store.service';
+import { PersistenceService } from '../../../core/services/persistence.service';
 import { GameModeConfig, MatchFormat, X01Config } from '../../../core/models/match-config.model';
 import { X01Options } from '../x01-options/x01-options';
 import { MatchFormatPicker, MatchFormatSelection } from '../match-format/match-format';
 
 type Mode = 'x01' | 'cricket' | 'atc';
+
+const SELECTED_PLAYER_IDS_KEY = 'darts.selectedPlayerIds.v1';
+const MODE_KEY = 'darts.setupMode.v1';
+const X01_CONFIG_KEY = 'darts.setupX01Config.v1';
+const FORMAT_SELECTION_KEY = 'darts.setupFormatSelection.v1';
+const RANDOMIZE_ORDER_KEY = 'darts.setupRandomizeOrder.v1';
 
 @Component({
   selector: 'app-match-setup-page',
@@ -31,21 +38,39 @@ export class MatchSetupPage {
   private readonly router = inject(Router);
   protected readonly roster = inject(PlayerRosterService);
   private readonly matchStore = inject(MatchStoreService);
+  private readonly persistence = inject(PersistenceService);
 
-  protected readonly mode = signal<Mode>('x01');
-  protected readonly x01Config = signal<X01Config>({
-    mode: 'x01',
-    startingScore: 501,
-    checkoutMode: 'double',
-    checkinMode: 'normal',
-  });
-  protected readonly formatSelection = signal<MatchFormatSelection>({
-    bestOfLegs: 3,
-    useSets: false,
-    bestOfSets: 3,
-  });
-  protected readonly selectedPlayerIds = signal<string[]>([]);
-  protected readonly randomizeOrder = signal(false);
+  // All setup state below is persisted so it survives navigating away and back (e.g. once
+  // a match ends or is aborted) instead of resetting to defaults every time this page is
+  // re-created.
+  protected readonly mode = signal<Mode>(this.persistence.get<Mode>(MODE_KEY, 'x01'));
+  protected readonly x01Config = signal<X01Config>(
+    this.persistence.get<X01Config>(X01_CONFIG_KEY, {
+      mode: 'x01',
+      startingScore: 501,
+      checkoutMode: 'double',
+      checkinMode: 'normal',
+    }),
+  );
+  protected readonly formatSelection = signal<MatchFormatSelection>(
+    this.persistence.get<MatchFormatSelection>(FORMAT_SELECTION_KEY, {
+      bestOfLegs: 3,
+      useSets: false,
+      bestOfSets: 3,
+    }),
+  );
+  protected readonly selectedPlayerIds = signal<string[]>(this.persistence.get(SELECTED_PLAYER_IDS_KEY, []));
+  protected readonly randomizeOrder = signal(this.persistence.get(RANDOMIZE_ORDER_KEY, false));
+
+  constructor() {
+    effect(() => {
+      this.persistence.set(MODE_KEY, this.mode());
+      this.persistence.set(X01_CONFIG_KEY, this.x01Config());
+      this.persistence.set(FORMAT_SELECTION_KEY, this.formatSelection());
+      this.persistence.set(SELECTED_PLAYER_IDS_KEY, this.selectedPlayerIds());
+      this.persistence.set(RANDOMIZE_ORDER_KEY, this.randomizeOrder());
+    });
+  }
 
   protected readonly availablePlayers = computed(() => {
     const selected = new Set(this.selectedPlayerIds());
@@ -59,7 +84,7 @@ export class MatchSetupPage {
       .filter((p) => p !== undefined);
   });
 
-  protected readonly canStart = computed(() => this.selectedPlayerIds().length >= 1);
+  protected readonly canStart = computed(() => this.selectedPlayers().length >= 1);
 
   private readonly gameConfig = computed<GameModeConfig>(() => {
     switch (this.mode()) {
@@ -122,7 +147,8 @@ export class MatchSetupPage {
     if (!this.canStart()) {
       return;
     }
-    const playerIds = this.randomizeOrder() ? this.shuffle(this.selectedPlayerIds()) : this.selectedPlayerIds();
+    const existingIds = this.selectedPlayers().map((p) => p.id);
+    const playerIds = this.randomizeOrder() ? this.shuffle(existingIds) : existingIds;
     this.matchStore.startNewMatch(this.gameConfig(), this.matchFormat(), playerIds);
     this.router.navigate(['/match']);
   }
