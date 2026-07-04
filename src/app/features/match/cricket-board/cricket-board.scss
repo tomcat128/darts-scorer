@@ -26,6 +26,22 @@ td.active {
   opacity: 0.8;
 }
 
+.player-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.remove-player-btn {
+  opacity: 0.5;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 32px;
+    height: 32px;
+  }
+}
+
 .marks {
   font-size: 1.3rem;
   font-weight: 600;

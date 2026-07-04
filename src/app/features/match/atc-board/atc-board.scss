@@ -20,9 +20,19 @@
 .tile-header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   font-size: 0.9rem;
   opacity: 0.8;
+}
+
+.remove-player-btn {
+  opacity: 0.5;
+  margin-left: 4px;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 36px;
+    height: 36px;
+  }
 }
 
 .legs-sets {

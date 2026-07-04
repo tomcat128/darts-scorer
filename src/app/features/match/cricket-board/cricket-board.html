@@ -4,7 +4,21 @@
       <tr>
         <th></th>
         @for (player of players(); track player.id) {
-          <th [class.active]="player.id === matchStore.currentPlayerId()">{{ player.name }}</th>
+          <th [class.active]="player.id === matchStore.currentPlayerId()">
+            <div class="player-header">
+              <span class="player-name">{{ player.name }}</span>
+              @if (canRemovePlayers()) {
+                <button
+                  class="remove-player-btn"
+                  matIconButton
+                  (click)="confirmRemovePlayer(player.id, player.name)"
+                  aria-label="Spieler entfernen"
+                >
+                  <mat-icon>person_remove</mat-icon>
+                </button>
+              }
+            </div>
+          </th>
         }
       </tr>
     </thead>

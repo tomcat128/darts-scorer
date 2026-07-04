@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Dart } from '../models/dart.model';
 import { TurnEvent } from '../engine/match-engine';
 import { GameModeConfig, MatchFormat } from '../models/match-config.model';
-import { MatchSnapshot } from '../models/match-state.model';
+import { MatchSnapshot, RemovedPlayerRecord } from '../models/match-state.model';
 import { MatchEngine } from '../engine/match-engine';
 import { PersistenceService } from './persistence.service';
 
@@ -19,10 +19,17 @@ export class MatchStoreService {
     if (!snapshot) {
       return null;
     }
-    return new MatchEngine(snapshot.gameConfig, snapshot.format, snapshot.playerIds, snapshot.throwLog);
+    return new MatchEngine(
+      snapshot.gameConfig,
+      snapshot.format,
+      snapshot.playerIds,
+      snapshot.throwLog,
+      snapshot.removedPlayers ?? [],
+    );
   });
 
   readonly currentPlayerId = computed(() => this.engine()?.currentPlayerId ?? null);
+  readonly activePlayerIds = computed(() => this.engine()?.activePlayerIds ?? []);
   readonly isMatchComplete = computed(() => this.engine()?.isMatchComplete ?? false);
   readonly winnerId = computed(() => this.engine()?.matchWinnerId ?? null);
   readonly currentTurnDarts = computed(() => this.engine()?.currentTurnDarts ?? []);
@@ -80,12 +87,34 @@ export class MatchStoreService {
     this.persist();
   }
 
+  /** No-op if fewer than 2 players are currently active, or the player is already removed. */
+  removePlayerFromMatch(playerId: string): void {
+    const snapshot = this.activeMatch();
+    if (!snapshot) {
+      return;
+    }
+    const active = this.activePlayerIds();
+    if (active.length < 2 || !active.includes(playerId)) {
+      return;
+    }
+    const removal: RemovedPlayerRecord = { playerId, afterDartCount: snapshot.throwLog.length };
+    this.activeMatch.set({
+      ...snapshot,
+      removedPlayers: [...(snapshot.removedPlayers ?? []), removal],
+    });
+    this.persist();
+  }
+
   undoLastDart(): void {
     const snapshot = this.activeMatch();
     if (!snapshot || snapshot.throwLog.length === 0) {
       return;
     }
-    this.activeMatch.set({ ...snapshot, throwLog: snapshot.throwLog.slice(0, -1) });
+    const throwLog = snapshot.throwLog.slice(0, -1);
+    // Drop any removal that undo has rewound past, so it doesn't silently reapply once
+    // play crosses that same dart count again.
+    const removedPlayers = (snapshot.removedPlayers ?? []).filter((r) => r.afterDartCount <= throwLog.length);
+    this.activeMatch.set({ ...snapshot, throwLog, removedPlayers });
     this.persist();
   }
 

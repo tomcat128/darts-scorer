@@ -9,6 +9,16 @@
           }
           <span>{{ matchStore.legsWonByPlayer()[player.id] ?? 0 }} Legs</span>
         </span>
+        @if (canRemovePlayers()) {
+          <button
+            class="remove-player-btn"
+            matIconButton
+            (click)="confirmRemovePlayer(player.id, player.name)"
+            aria-label="Spieler entfernen"
+          >
+            <mat-icon>person_remove</mat-icon>
+          </button>
+        }
       </div>
 
       <div class="tile-body">

@@ -30,6 +30,17 @@
         </div>
       </div>
 
+      @if (canRemovePlayers()) {
+        <button
+          class="remove-player-btn"
+          matIconButton
+          (click)="confirmRemovePlayer(player.id, player.name)"
+          aria-label="Spieler entfernen"
+        >
+          <mat-icon>person_remove</mat-icon>
+        </button>
+      }
+
       @if (!displayFor(player.id).checkedIn) {
         <div class="checkin-hint">Noch nicht eingecheckt</div>
       } @else if (checkoutLabelFor(player.id); as checkout) {

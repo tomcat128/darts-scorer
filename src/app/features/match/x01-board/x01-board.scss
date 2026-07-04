@@ -6,6 +6,7 @@
 }
 
 .player-tile {
+  position: relative;
   width: 100%;
   padding: 6px 12px;
   border-radius: 10px;
@@ -115,4 +116,16 @@
 
 .checkin-hint {
   opacity: 0.6;
+}
+
+.remove-player-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  opacity: 0.5;
+
+  ::ng-deep .mat-mdc-button-touch-target {
+    width: 36px;
+    height: 36px;
+  }
 }

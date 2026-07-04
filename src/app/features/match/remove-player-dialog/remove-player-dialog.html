@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>Spieler entfernen?</h2>
+<mat-dialog-content>{{ data.playerName }} wird aus dem laufenden Match entfernt und wirft keine weiteren Darts mehr.</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton (click)="close('cancel')">Abbrechen</button>
+  <button matButton="filled" (click)="close('confirm')">Entfernen</button>
+</mat-dialog-actions>

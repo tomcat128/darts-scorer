@@ -1,6 +1,6 @@
 import { Dart } from '../models/dart.model';
 import { GameModeConfig, MatchFormat } from '../models/match-config.model';
-import { ThrowEvent } from '../models/match-state.model';
+import { RemovedPlayerRecord, ThrowEvent } from '../models/match-state.model';
 import { GameModeStrategy, TurnContext } from '../models/game-mode-strategy.model';
 import { X01Strategy } from './strategies/x01-strategy';
 import { CricketStrategy } from './strategies/cricket-strategy';
@@ -35,11 +35,14 @@ function rotate<T>(items: T[], shift: number): T[] {
  * Mode-agnostic turn/leg/set/match progression. Zero Angular dependencies, replay-friendly:
  * constructing with a throwLog replays every dart through recordDart() to deterministically
  * reconstruct whose turn each dart belonged to (turn order is a pure function of the rules,
- * so the log itself doesn't need to carry playerId).
+ * so the log itself doesn't need to carry playerId). removedPlayers is replayed alongside it,
+ * each removal taking effect at the exact dart count it was recorded at - see
+ * applyDueRemovals().
  */
 export class MatchEngine {
   private readonly strategy: GameModeStrategy<unknown>;
   private readonly playerIds: string[];
+  private activeIds: string[];
   private readonly format: MatchFormat;
 
   private legIndexGlobal = 0;
@@ -58,21 +61,57 @@ export class MatchEngine {
   private readonly throwLog: ThrowEvent[] = [];
   private readonly events: TurnEvent[] = [];
 
-  constructor(gameConfig: GameModeConfig, format: MatchFormat, playerIds: string[], throwLog: ThrowEvent[] = []) {
+  constructor(
+    gameConfig: GameModeConfig,
+    format: MatchFormat,
+    playerIds: string[],
+    throwLog: ThrowEvent[] = [],
+    removedPlayers: RemovedPlayerRecord[] = [],
+  ) {
     this.strategy = createStrategy(gameConfig);
     this.playerIds = playerIds;
+    this.activeIds = [...playerIds];
     this.format = format;
 
     for (const id of playerIds) {
       this.legsWonInSet[id] = 0;
       this.setsWon[id] = 0;
     }
-    this.throwOrderForLeg = rotate(playerIds, this.legIndexGlobal);
-    this.legState = this.strategy.initLegState(playerIds);
+    this.throwOrderForLeg = rotate(this.activeIds, this.legIndexGlobal);
+    this.legState = this.strategy.initLegState(this.activeIds);
     this.turnCtx = { turnStartState: this.cloneLegState(), dartsThrownThisTurn: [] };
 
+    let dartCount = 0;
     for (const event of throwLog) {
+      this.applyDueRemovals(removedPlayers, dartCount);
       this.recordDart(event.dart, event.timestamp);
+      dartCount++;
+    }
+    this.applyDueRemovals(removedPlayers, dartCount);
+  }
+
+  /** Takes effect exactly at the dart count recorded when the removal happened, so darts the
+   *  player already threw stay attributed to them while every turn after is skipped for them. */
+  private applyDueRemovals(removedPlayers: RemovedPlayerRecord[], dartCount: number): void {
+    for (const removal of removedPlayers) {
+      if (removal.afterDartCount === dartCount && this.activeIds.includes(removal.playerId)) {
+        this.removeFromRotation(removal.playerId);
+      }
+    }
+  }
+
+  private removeFromRotation(playerId: string): void {
+    const wasCurrent = this.currentPlayerId === playerId;
+    const fallbackNextId = this.throwOrderForLeg[(this.currentPlayerIndex + 1) % this.throwOrderForLeg.length];
+    const pointerId = wasCurrent ? fallbackNextId : this.currentPlayerId;
+
+    this.activeIds = this.activeIds.filter((id) => id !== playerId);
+    this.throwOrderForLeg = this.throwOrderForLeg.filter((id) => id !== playerId);
+    delete this.legState[playerId];
+
+    this.currentPlayerIndex = Math.max(this.throwOrderForLeg.indexOf(pointerId), 0);
+    if (wasCurrent) {
+      this.turnCtx = { turnStartState: this.cloneLegState(), dartsThrownThisTurn: [] };
     }
   }
 
@@ -110,6 +149,10 @@ export class MatchEngine {
 
   get eventHistory(): readonly TurnEvent[] {
     return this.events;
+  }
+
+  get activePlayerIds(): string[] {
+    return [...this.activeIds];
   }
 
   get fullThrowLog(): readonly ThrowEvent[] {
@@ -177,9 +220,9 @@ export class MatchEngine {
     }
 
     this.legIndexGlobal++;
-    this.throwOrderForLeg = rotate(this.playerIds, this.legIndexGlobal);
+    this.throwOrderForLeg = rotate(this.activeIds, this.legIndexGlobal);
     this.currentPlayerIndex = 0;
-    this.legState = this.strategy.initLegState(this.playerIds);
+    this.legState = this.strategy.initLegState(this.activeIds);
     this.turnCtx = { turnStartState: this.cloneLegState(), dartsThrownThisTurn: [] };
   }
 }

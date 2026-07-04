@@ -1,5 +1,8 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { Dart, dartLabel, dartValue } from '../../../core/models/dart.model';
 import { CheckoutMode } from '../../../core/models/match-config.model';
 import { PlayerRosterService } from '../../../core/services/player-roster.service';
@@ -7,12 +10,13 @@ import { MatchStoreService } from '../../../core/services/match-store.service';
 import { CheckoutSuggestionService } from '../../../core/services/checkout-suggestion.service';
 import { SoundService } from '../../../core/services/sound.service';
 import { X01LegState } from '../../../core/engine/strategies/x01-strategy';
+import { RemovePlayerDialog } from '../remove-player-dialog/remove-player-dialog';
 
 const BUST_FLASH_DURATION_MS = 700;
 
 @Component({
   selector: 'app-x01-board',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, MatButtonModule, MatIconModule],
   templateUrl: './x01-board.html',
   styleUrl: './x01-board.scss',
 })
@@ -21,6 +25,7 @@ export class X01Board {
   private readonly roster = inject(PlayerRosterService);
   private readonly checkoutService = inject(CheckoutSuggestionService);
   private readonly sound = inject(SoundService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly players = computed(() => {
     const snapshot = this.matchStore.activeMatch();
@@ -28,8 +33,10 @@ export class X01Board {
       return [];
     }
     const byId = new Map(this.roster.players().map((p) => [p.id, p]));
-    return snapshot.playerIds.map((id) => byId.get(id) ?? { id, name: '?', createdAt: 0 });
+    return this.matchStore.activePlayerIds().map((id) => byId.get(id) ?? { id, name: '?', createdAt: 0 });
   });
+
+  protected readonly canRemovePlayers = computed(() => this.matchStore.activePlayerIds().length >= 2);
 
   protected readonly useSets = computed(() => (this.matchStore.activeMatch()?.format.setsToWinMatch ?? 1) > 1);
 
@@ -126,5 +133,14 @@ export class X01Board {
     }
     const combo = this.checkoutService.suggest(state.remaining, dartsLeft, this.checkoutMode());
     return combo ? combo.map((o) => dartLabel(o.dart)).join(' → ') : null;
+  }
+
+  confirmRemovePlayer(playerId: string, playerName: string): void {
+    const ref = this.dialog.open(RemovePlayerDialog, { data: { playerName } });
+    ref.afterClosed().subscribe((result) => {
+      if (result === 'confirm') {
+        this.matchStore.removePlayerFromMatch(playerId);
+      }
+    });
   }
 }
