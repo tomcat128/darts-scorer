@@ -23,7 +23,7 @@
   <div class="option-row">
     <span class="option-label">Checkin</span>
     <mat-button-toggle-group [value]="config().checkinMode" (change)="setCheckinMode($event.value)">
-      <mat-button-toggle value="normal">Normal</mat-button-toggle>
+      <mat-button-toggle value="normal">Straight In</mat-button-toggle>
       <mat-button-toggle value="double">Double In</mat-button-toggle>
       <mat-button-toggle value="master">Master In</mat-button-toggle>
     </mat-button-toggle-group>
@@ -32,7 +32,7 @@
   <div class="option-row">
     <span class="option-label">Checkout</span>
     <mat-button-toggle-group [value]="config().checkoutMode" (change)="setCheckoutMode($event.value)">
-      <mat-button-toggle value="normal">Normal</mat-button-toggle>
+      <mat-button-toggle value="normal">Straight Out</mat-button-toggle>
       <mat-button-toggle value="double">Double Out</mat-button-toggle>
       <mat-button-toggle value="master">Master Out</mat-button-toggle>
     </mat-button-toggle-group>

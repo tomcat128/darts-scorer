@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { PlayerRosterService } from '../../../core/services/player-roster.service';
 import { MatchStoreService } from '../../../core/services/match-store.service';
 import { GameModeConfig, MatchFormat, X01Config } from '../../../core/models/match-config.model';
@@ -19,6 +20,7 @@ type Mode = 'x01' | 'cricket' | 'atc';
     MatButtonToggleModule,
     MatIconModule,
     MatListModule,
+    MatSlideToggleModule,
     X01Options,
     MatchFormatPicker,
   ],
@@ -40,9 +42,10 @@ export class MatchSetupPage {
   protected readonly formatSelection = signal<MatchFormatSelection>({
     bestOfLegs: 3,
     useSets: false,
-    bestOfSets: 1,
+    bestOfSets: 3,
   });
   protected readonly selectedPlayerIds = signal<string[]>([]);
+  protected readonly randomizeOrder = signal(false);
 
   protected readonly availablePlayers = computed(() => {
     const selected = new Set(this.selectedPlayerIds());
@@ -111,11 +114,25 @@ export class MatchSetupPage {
     });
   }
 
+  setRandomizeOrder(randomize: boolean): void {
+    this.randomizeOrder.set(randomize);
+  }
+
   startMatch(): void {
     if (!this.canStart()) {
       return;
     }
-    this.matchStore.startNewMatch(this.gameConfig(), this.matchFormat(), this.selectedPlayerIds());
+    const playerIds = this.randomizeOrder() ? this.shuffle(this.selectedPlayerIds()) : this.selectedPlayerIds();
+    this.matchStore.startNewMatch(this.gameConfig(), this.matchFormat(), playerIds);
     this.router.navigate(['/match']);
+  }
+
+  private shuffle<T>(items: T[]): T[] {
+    const copy = [...items];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
   }
 }

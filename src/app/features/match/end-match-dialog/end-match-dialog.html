@@ -1,0 +1,6 @@
+<h2 mat-dialog-title>Spiel beenden?</h2>
+<mat-dialog-content>Das laufende Match wird beendet und der Fortschritt geht verloren.</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton (click)="close('cancel')">Abbrechen</button>
+  <button matButton="filled" (click)="close('confirm')">Beenden</button>
+</mat-dialog-actions>

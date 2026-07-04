@@ -12,6 +12,15 @@
   ::ng-deep .mat-button-toggle {
     flex: 1;
   }
+
+  ::ng-deep .mat-button-toggle-button {
+    min-height: 52px;
+  }
+
+  ::ng-deep .mat-button-toggle-label-content {
+    font-size: 1.05rem;
+    line-height: 52px;
+  }
 }
 
 .number-grid {

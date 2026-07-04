@@ -25,13 +25,18 @@
           <div class="order-row">
             <span class="order-name">{{ i + 1 }}. {{ player.name }}</span>
             <span class="order-actions">
-              <button matIconButton (click)="moveUp(i)" [disabled]="i === 0" aria-label="Nach oben">
+              <button
+                matIconButton
+                (click)="moveUp(i)"
+                [disabled]="randomizeOrder() || i === 0"
+                aria-label="Nach oben"
+              >
                 <mat-icon>arrow_upward</mat-icon>
               </button>
               <button
                 matIconButton
                 (click)="moveDown(i)"
-                [disabled]="i === selectedPlayers().length - 1"
+                [disabled]="randomizeOrder() || i === selectedPlayers().length - 1"
                 aria-label="Nach unten"
               >
                 <mat-icon>arrow_downward</mat-icon>
@@ -45,6 +50,13 @@
           <p class="empty-hint">Noch keine Spieler ausgewählt.</p>
         }
       </div>
+
+      <mat-slide-toggle
+        [checked]="randomizeOrder()"
+        (change)="setRandomizeOrder($event.checked)"
+      >
+        Zufällige Reihenfolge nach Start
+      </mat-slide-toggle>
     </div>
   </section>
 

@@ -31,33 +31,31 @@
 }
 
 .tile-columns {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 8px;
 }
 
 .col-left {
-  flex: 1 1 0;
   min-width: 0;
 }
 
 .col-mid {
-  flex: 1 1 0;
   min-width: 0;
   text-align: center;
 }
 
 .col-right {
-  flex: 0 1 auto;
   min-width: 0;
   text-align: right;
-  font-size: 0.85rem;
+  font-size: 1rem;
   opacity: 0.85;
   white-space: nowrap;
 }
 
 .player-name {
-  font-size: 0.85rem;
+  font-size: 1rem;
   opacity: 0.8;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -71,7 +69,7 @@
 }
 
 .dart-count {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   opacity: 0.7;
 }
 
@@ -84,7 +82,7 @@
 .dart-chip {
   background: var(--mat-sys-surface-container-high);
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: 6px 10px;
   font-weight: 600;
   min-width: 2em;
 
@@ -96,14 +94,14 @@
 
 .turn-total {
   margin-top: 4px;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 600;
   opacity: 0.9;
 }
 
 .checkin-hint,
 .checkout-hint {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin-top: 4px;
 }
 
