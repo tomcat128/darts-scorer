@@ -21,6 +21,26 @@
     font-size: 1.05rem;
     line-height: 52px;
   }
+
+  // Replace the default checkmark with a solid green fill on the selected option.
+  ::ng-deep .mat-button-toggle-checkbox-wrapper {
+    display: none;
+  }
+
+  // Material reserves 30px of left padding on the button whenever it's checked (room for
+  // the checkmark we just hid) - pin it to 0 in both states so the label doesn't shift.
+  ::ng-deep .mat-button-toggle-button {
+    padding-left: 0;
+  }
+
+  ::ng-deep .mat-button-toggle-checked .mat-button-toggle-button {
+    padding-left: 0;
+    background-color: #2e7d32;
+  }
+
+  ::ng-deep .mat-button-toggle-checked .mat-button-toggle-label-content {
+    color: #fff;
+  }
 }
 
 .number-grid {
