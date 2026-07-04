@@ -17,7 +17,7 @@ type Mode = 'x01' | 'cricket' | 'atc';
 const SELECTED_PLAYER_IDS_KEY = 'darts.selectedPlayerIds.v1';
 const MODE_KEY = 'darts.setupMode.v1';
 const X01_CONFIG_KEY = 'darts.setupX01Config.v1';
-const FORMAT_SELECTION_KEY = 'darts.setupFormatSelection.v1';
+const FORMAT_SELECTION_KEY = 'darts.setupFormatSelection.v2';
 const RANDOMIZE_ORDER_KEY = 'darts.setupRandomizeOrder.v1';
 
 @Component({
@@ -54,9 +54,11 @@ export class MatchSetupPage {
   );
   protected readonly formatSelection = signal<MatchFormatSelection>(
     this.persistence.get<MatchFormatSelection>(FORMAT_SELECTION_KEY, {
-      bestOfLegs: 3,
+      legsMode: 'bestOf',
+      legsCount: 3,
       useSets: false,
-      bestOfSets: 3,
+      setsMode: 'bestOf',
+      setsCount: 3,
     }),
   );
   protected readonly selectedPlayerIds = signal<string[]>(this.persistence.get(SELECTED_PLAYER_IDS_KEY, []));
@@ -100,8 +102,12 @@ export class MatchSetupPage {
   private readonly matchFormat = computed<MatchFormat>(() => {
     const sel = this.formatSelection();
     return {
-      legsToWinSet: Math.floor(sel.bestOfLegs / 2) + 1,
-      setsToWinMatch: sel.useSets ? Math.floor(sel.bestOfSets / 2) + 1 : 1,
+      legsToWinSet: sel.legsMode === 'firstTo' ? sel.legsCount : Math.floor(sel.legsCount / 2) + 1,
+      setsToWinMatch: sel.useSets
+        ? sel.setsMode === 'firstTo'
+          ? sel.setsCount
+          : Math.floor(sel.setsCount / 2) + 1
+        : 1,
     };
   });
 

@@ -51,7 +51,7 @@
 
 .special-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 6px;
 }
 
@@ -81,7 +81,8 @@
   background: var(--mat-sys-error-container);
 }
 
-.undo-row {
+.undo-button {
   display: flex;
+  align-items: center;
   justify-content: center;
 }

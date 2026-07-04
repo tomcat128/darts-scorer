@@ -1,15 +1,26 @@
 <div class="match-format">
-  <mat-form-field appearance="outline" class="best-of-field">
-    <mat-label>Best of (Legs)</mat-label>
-    <input
-      matInput
-      type="number"
-      min="1"
-      step="2"
-      [value]="selection().bestOfLegs"
-      (change)="setBestOfLegs($any($event.target).value)"
-    />
-  </mat-form-field>
+  <div class="count-config">
+    <mat-button-toggle-group
+      [value]="selection().legsMode"
+      (change)="setLegsMode($event.value)"
+      aria-label="Legs-Modus"
+    >
+      <mat-button-toggle value="bestOf">Best of</mat-button-toggle>
+      <mat-button-toggle value="firstTo">First to</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-form-field appearance="outline" class="best-of-field">
+      <mat-label>{{ selection().legsMode === 'bestOf' ? 'Best of (Legs)' : 'Legs zum Sieg' }}</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1"
+        [step]="selection().legsMode === 'bestOf' ? 2 : 1"
+        [value]="selection().legsCount"
+        (change)="setLegsCount($any($event.target).value)"
+      />
+    </mat-form-field>
+  </div>
 
   <mat-slide-toggle
     [checked]="selection().useSets"
@@ -19,16 +30,27 @@
   </mat-slide-toggle>
 
   @if (selection().useSets) {
-    <mat-form-field appearance="outline" class="best-of-field">
-      <mat-label>Best of (Sets)</mat-label>
-      <input
-        matInput
-        type="number"
-        min="1"
-        step="2"
-        [value]="selection().bestOfSets"
-        (change)="setBestOfSets($any($event.target).value)"
-      />
-    </mat-form-field>
+    <div class="count-config">
+      <mat-button-toggle-group
+        [value]="selection().setsMode"
+        (change)="setSetsMode($event.value)"
+        aria-label="Sets-Modus"
+      >
+        <mat-button-toggle value="bestOf">Best of</mat-button-toggle>
+        <mat-button-toggle value="firstTo">First to</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <mat-form-field appearance="outline" class="best-of-field">
+        <mat-label>{{ selection().setsMode === 'bestOf' ? 'Best of (Sets)' : 'Sets zum Sieg' }}</mat-label>
+        <input
+          matInput
+          type="number"
+          min="1"
+          [step]="selection().setsMode === 'bestOf' ? 2 : 1"
+          [value]="selection().setsCount"
+          (change)="setSetsCount($any($event.target).value)"
+        />
+      </mat-form-field>
+    </div>
   }
 </div>

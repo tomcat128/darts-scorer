@@ -14,12 +14,8 @@
   <div class="special-row">
     <button class="num-button bull-button" [disabled]="multiplier() === 3" (click)="throwBull()">Bull</button>
     <button class="num-button miss-button" (click)="throwMiss()">Daneben</button>
-  </div>
-
-  <div class="undo-row">
-    <button matButton (click)="undo()">
+    <button class="num-button undo-button" (click)="undo()" aria-label="Undo Dart">
       <mat-icon>undo</mat-icon>
-      Undo Dart
     </button>
   </div>
 </div>

@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { Multiplier } from '../../../core/models/dart.model';
@@ -7,7 +6,7 @@ import { MatchStoreService } from '../../../core/services/match-store.service';
 
 @Component({
   selector: 'app-numpad',
-  imports: [MatButtonModule, MatButtonToggleModule, MatIconModule],
+  imports: [MatButtonToggleModule, MatIconModule],
   templateUrl: './numpad.html',
   styleUrl: './numpad.scss',
 })

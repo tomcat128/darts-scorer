@@ -1,9 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { filter, map } from 'rxjs';
 import { ThemeService } from './core/services/theme.service';
 import { MatchStoreService } from './core/services/match-store.service';
 import type { EndMatchDialogResult } from './features/match/end-match-dialog/end-match-dialog';
@@ -19,6 +21,14 @@ export class App {
   protected readonly matchStore = inject(MatchStoreService);
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
+
+  protected readonly isMatchSetupRoute = toSignal(
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects === '/new-match'),
+    ),
+    { initialValue: this.router.url === '/new-match' },
+  );
 
   async confirmEndMatch(): Promise<void> {
     const { EndMatchDialog } = await import('./features/match/end-match-dialog/end-match-dialog');

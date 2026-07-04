@@ -5,6 +5,13 @@
   gap: 16px;
 }
 
+.count-config {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .best-of-field {
   max-width: 160px;
 }
