@@ -44,28 +44,41 @@
   }
 }
 
-// Landscape (not portrait): split player cards and input 50/50 side by side,
-// with the top bar (end-match / dark mode) staying pinned above via app.html.
+// Landscape (not portrait): split player cards and input 50/50 side by side, with the
+// leg/set indicator stacked above the player cards in the left column instead of spanning
+// the full width. The end-match/dark-mode controls float over the bottom-left corner (see
+// app.scss), so the player-card column also reserves space at the bottom for them - the
+// numpad column (right) is completely unaffected by either reservation.
 @media (orientation: landscape) {
   .match-body {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'leg numpad'
+      'board numpad';
+
+    .leg-indicator {
+      grid-area: leg;
+    }
 
     app-x01-board,
     app-cricket-board,
     app-atc-board {
-      flex: 1 1 50%;
-      width: 50%;
+      grid-area: board;
       min-width: 0;
-      height: 100%;
+      min-height: 0;
       overflow-y: auto;
+      padding-left: env(safe-area-inset-left);
+      padding-bottom: calc(48px + env(safe-area-inset-bottom));
     }
 
     app-numpad {
-      flex: 1 1 50%;
-      width: 50%;
+      grid-area: numpad;
       min-width: 0;
-      height: 100%;
+      min-height: 0;
       overflow-y: auto;
+      padding-right: env(safe-area-inset-right);
     }
   }
 }

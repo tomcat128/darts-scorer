@@ -1,12 +1,12 @@
 <div class="match-page">
-  <div class="leg-indicator">
-    Leg {{ matchStore.currentLegIndex() + 1 }}
-    @if (useSets()) {
-      · Set {{ currentSetIndex() }}
-    }
-  </div>
-
   <div class="match-body">
+    <div class="leg-indicator">
+      Leg {{ matchStore.currentLegIndex() + 1 }}
+      @if (useSets()) {
+        · Set {{ currentSetIndex() }}
+      }
+    </div>
+
     @switch (matchStore.activeMatch()?.gameConfig?.mode) {
       @case ('x01') {
         <app-x01-board />

@@ -45,3 +45,20 @@
   // Pages that need to fill this area exactly (see match-page.scss) size themselves via
   // their own :host rule instead.
 }
+
+// Landscape (not portrait): the top bar sits opposite the notch/Dynamic Island area on
+// some devices (e.g. iPhone 17) and can end up clipped or hard to reach there. Move it to
+// the bottom instead, as a floating overlay confined to the left (player-card) column so it
+// never reserves space across the numpad column on the match page (see match-page.scss) -
+// the end-match button sits flush left and dark-mode flush right within that column.
+@media (orientation: landscape) {
+  .top-bar {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 50%;
+    z-index: 10;
+    background: var(--mat-sys-surface);
+    padding: 4px 8px calc(4px + env(safe-area-inset-bottom)) calc(8px + env(safe-area-inset-left));
+  }
+}

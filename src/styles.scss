@@ -44,4 +44,20 @@ body {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
+
+// Scrollable regions (app shell content, per-mode boards, numpad in landscape) stay
+// scrollable but hide the visible scrollbar track/thumb - this is a touch-first app and
+// the scroll affordance (swipe) doesn't need a persistent on-screen scrollbar.
+.app-content,
+app-x01-board,
+app-cricket-board,
+app-atc-board,
+app-numpad {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
 /* You can add global styles to this file, and also import other style files */
