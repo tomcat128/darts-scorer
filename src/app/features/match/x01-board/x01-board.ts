@@ -113,11 +113,14 @@ export class X01Board {
   }
 
   checkoutLabelFor(playerId: string): string | null {
+    if (playerId !== this.matchStore.currentPlayerId()) {
+      return null;
+    }
     const state = this.displayFor(playerId);
     if (!state.checkedIn) {
       return null;
     }
-    const dartsLeft = playerId === this.matchStore.currentPlayerId() ? this.matchStore.dartsRemainingInTurn() : 3;
+    const dartsLeft = this.matchStore.dartsRemainingInTurn();
     if (dartsLeft <= 0) {
       return null;
     }
