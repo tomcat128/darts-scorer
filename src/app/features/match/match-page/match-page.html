@@ -6,19 +6,21 @@
     }
   </div>
 
-  @switch (matchStore.activeMatch()?.gameConfig?.mode) {
-    @case ('x01') {
-      <app-x01-board />
+  <div class="match-body">
+    @switch (matchStore.activeMatch()?.gameConfig?.mode) {
+      @case ('x01') {
+        <app-x01-board />
+      }
+      @case ('cricket') {
+        <app-cricket-board />
+      }
+      @case ('atc') {
+        <app-atc-board />
+      }
     }
-    @case ('cricket') {
-      <app-cricket-board />
-    }
-    @case ('atc') {
-      <app-atc-board />
-    }
-  }
 
-  @if (!matchStore.isMatchComplete()) {
-    <app-numpad />
-  }
+    @if (!matchStore.isMatchComplete()) {
+      <app-numpad />
+    }
+  </div>
 </div>

@@ -14,6 +14,22 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+}
+
+.leg-indicator {
+  flex: 0 0 auto;
+  padding: 6px 12px 0;
+  font-weight: 700;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.match-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 
   app-x01-board,
   app-cricket-board,
@@ -28,10 +44,28 @@
   }
 }
 
-.leg-indicator {
-  flex: 0 0 auto;
-  padding: 6px 12px 0;
-  font-weight: 700;
-  font-size: 0.9rem;
-  opacity: 0.85;
+// Landscape (not portrait): split player cards and input 50/50 side by side,
+// with the top bar (end-match / dark mode) staying pinned above via app.html.
+@media (orientation: landscape) {
+  .match-body {
+    flex-direction: row;
+
+    app-x01-board,
+    app-cricket-board,
+    app-atc-board {
+      flex: 1 1 50%;
+      width: 50%;
+      min-width: 0;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    app-numpad {
+      flex: 1 1 50%;
+      width: 50%;
+      min-width: 0;
+      height: 100%;
+      overflow-y: auto;
+    }
+  }
 }
