@@ -65,6 +65,17 @@ h3 {
   font-size: 0.85rem;
 }
 
+.manage-players-link {
+  align-self: flex-start;
+  font-size: 0.85rem;
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .start-button {
   min-height: 56px;
   font-size: 1.1rem;

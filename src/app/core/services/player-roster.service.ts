@@ -25,6 +25,15 @@ export class PlayerRosterService {
     this.persist();
   }
 
+  renamePlayer(id: string, name: string): void {
+    const trimmed = name.trim();
+    if (!trimmed) {
+      return;
+    }
+    this.players.update((players) => players.map((p) => (p.id === id ? { ...p, name: trimmed } : p)));
+    this.persist();
+  }
+
   private persist(): void {
     this.persistence.set(ROSTER_KEY, this.players());
   }

@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +23,7 @@ const RANDOMIZE_ORDER_KEY = 'darts.setupRandomizeOrder.v1';
 @Component({
   selector: 'app-match-setup-page',
   imports: [
+    RouterLink,
     MatButtonModule,
     MatButtonToggleModule,
     MatIconModule,

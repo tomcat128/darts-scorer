@@ -12,6 +12,44 @@
   padding: 0 16px;
 }
 
+.player-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.player-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.rename-input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--mat-sys-outline);
+  outline: none;
+  padding: 2px 0;
+}
+
 .add-player {
   display: flex;
   align-items: flex-start;

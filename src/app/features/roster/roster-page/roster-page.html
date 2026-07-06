@@ -1,18 +1,42 @@
 <div class="roster-page">
   <h1>Spieler</h1>
 
-  <mat-list>
+  <div class="player-list">
     @for (player of roster.players(); track player.id) {
-      <mat-list-item>
-        {{ player.name }}
-        <button matIconButton matListItemMeta (click)="deletePlayer(player.id)" aria-label="Spieler löschen">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </mat-list-item>
+      <div class="player-row">
+        @if (editingPlayerId() === player.id) {
+          <input
+            class="rename-input"
+            [value]="editingName()"
+            (input)="editingName.set($any($event.target).value)"
+            (keyup.enter)="confirmRename(player.id)"
+            (keyup.escape)="cancelRename()"
+            autofocus
+          />
+          <span class="item-actions">
+            <button matIconButton (click)="confirmRename(player.id)" aria-label="Umbenennen speichern">
+              <mat-icon>check</mat-icon>
+            </button>
+            <button matIconButton (click)="cancelRename()" aria-label="Umbenennen abbrechen">
+              <mat-icon>close</mat-icon>
+            </button>
+          </span>
+        } @else {
+          <span class="player-name">{{ player.name }}</span>
+          <span class="item-actions">
+            <button matIconButton (click)="startRename(player)" aria-label="Spieler umbenennen">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button matIconButton (click)="deletePlayer(player.id)" aria-label="Spieler löschen">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+        }
+      </div>
     } @empty {
       <p class="empty-hint">Noch keine Spieler angelegt.</p>
     }
-  </mat-list>
+  </div>
 
   <div class="add-player">
     <mat-form-field appearance="outline" class="name-field">
