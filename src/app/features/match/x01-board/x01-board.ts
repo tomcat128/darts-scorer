@@ -3,6 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { Dart, dartLabel, dartValue } from '../../../core/models/dart.model';
 import { CheckoutMode } from '../../../core/models/match-config.model';
 import { PlayerRosterService } from '../../../core/services/player-roster.service';
@@ -16,7 +17,7 @@ const BUST_FLASH_DURATION_MS = 700;
 
 @Component({
   selector: 'app-x01-board',
-  imports: [DecimalPipe, MatButtonModule, MatIconModule],
+  imports: [DecimalPipe, MatButtonModule, MatIconModule, MatMenuModule],
   templateUrl: './x01-board.html',
   styleUrl: './x01-board.scss',
 })
@@ -39,11 +40,6 @@ export class X01Board {
   protected readonly canRemovePlayers = computed(() => this.matchStore.activePlayerIds().length >= 2);
 
   protected readonly useSets = computed(() => (this.matchStore.activeMatch()?.format.setsToWinMatch ?? 1) > 1);
-
-  private readonly checkoutMode = computed<CheckoutMode>(() => {
-    const snapshot = this.matchStore.activeMatch();
-    return snapshot && snapshot.gameConfig.mode === 'x01' ? snapshot.gameConfig.checkoutMode : 'normal';
-  });
 
   protected readonly flashingPlayerId = signal<string | null>(null);
   private lastSeenEventCount = 0;
@@ -131,8 +127,25 @@ export class X01Board {
     if (dartsLeft <= 0) {
       return null;
     }
-    const combo = this.checkoutService.suggest(state.remaining, dartsLeft, this.checkoutMode());
+    const mode = this.matchStore.playerCheckoutModeFor(playerId);
+    const combo = this.checkoutService.suggest(state.remaining, dartsLeft, mode);
     return combo ? combo.map((o) => dartLabel(o.dart)).join(' → ') : null;
+  }
+
+  /** Short label for the checkout-mode button: 1x = straight out, 2x = double out, M = master out. */
+  checkoutModeIcon(playerId: string): string {
+    switch (this.matchStore.playerCheckoutModeFor(playerId)) {
+      case 'double':
+        return '2x';
+      case 'master':
+        return 'M';
+      default:
+        return '1x';
+    }
+  }
+
+  setCheckoutMode(playerId: string, mode: CheckoutMode): void {
+    this.matchStore.setPlayerCheckoutMode(playerId, mode);
   }
 
   confirmRemovePlayer(playerId: string, playerName: string): void {

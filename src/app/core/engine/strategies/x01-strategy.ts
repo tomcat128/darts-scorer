@@ -18,7 +18,10 @@ function satisfiesGate(dart: Dart, gateMode: CheckinMode | CheckoutMode): boolea
 }
 
 export class X01Strategy implements GameModeStrategy<X01LegState> {
-  constructor(private readonly config: X01Config) {}
+  constructor(
+    private readonly config: X01Config,
+    private readonly playerCheckoutModes: Record<string, CheckoutMode> = {},
+  ) {}
 
   initLegState(playerIds: string[]): Record<string, X01LegState> {
     const initialState: Record<string, X01LegState> = {};
@@ -52,11 +55,12 @@ export class X01Strategy implements GameModeStrategy<X01LegState> {
     }
     const checkedIn = true;
 
+    const checkoutMode = this.playerCheckoutModes[playerId] ?? this.config.checkoutMode;
     const newRemaining = state.remaining - value;
     const bust =
       newRemaining < 0 ||
-      (newRemaining === 1 && this.config.checkoutMode !== 'normal') ||
-      (newRemaining === 0 && !satisfiesGate(dart, this.config.checkoutMode));
+      (newRemaining === 1 && checkoutMode !== 'normal') ||
+      (newRemaining === 0 && !satisfiesGate(dart, checkoutMode));
 
     if (bust) {
       return {

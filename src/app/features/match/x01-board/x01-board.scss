@@ -5,10 +5,17 @@
   padding: 6px 12px;
 }
 
+.player-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+}
+
 .player-tile {
   position: relative;
-  width: 100%;
-  padding: 6px 12px;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 4px 10px;
   border-radius: 10px;
   background: var(--mat-sys-surface-container);
 
@@ -20,6 +27,52 @@
   &.bust-flash {
     animation: bust-flash 0.7s ease-out;
   }
+}
+
+.player-actions {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.action-btn {
+  flex: 1 1 0;
+  min-height: 0;
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container-high);
+  color: inherit;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:active {
+    background: var(--mat-sys-surface-container-highest);
+  }
+}
+
+.mode-icon {
+  font-weight: 700;
+  margin-right: 8px;
+  min-width: 1.5em;
+  display: inline-block;
+}
+
+.selected {
+  color: var(--mat-sys-primary);
 }
 
 @keyframes bust-flash {
@@ -50,14 +103,14 @@
 .col-right {
   min-width: 0;
   text-align: right;
-  font-size: 1rem;
-  line-height: 1.25;
+  font-size: 0.9rem;
+  line-height: 1.2;
   opacity: 0.85;
   white-space: nowrap;
 }
 
 .player-name {
-  font-size: 1rem;
+  font-size: 0.9rem;
   line-height: 1.2;
   opacity: 0.8;
   overflow: hidden;
@@ -66,13 +119,13 @@
 }
 
 .remaining {
-  font-size: 2.2rem;
+  font-size: 1.9rem;
   font-weight: 700;
   line-height: 1;
 }
 
 .dart-count {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   line-height: 1.2;
   opacity: 0.7;
 }
@@ -86,7 +139,7 @@
 .dart-chip {
   background: var(--mat-sys-surface-container-high);
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: 3px 7px;
   font-weight: 600;
   min-width: 2em;
 
@@ -98,14 +151,14 @@
 
 .turn-total {
   margin-top: 2px;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   font-weight: 600;
   opacity: 0.9;
 }
 
 .checkin-hint,
 .checkout-hint {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   margin-top: 2px;
 }
 
@@ -116,16 +169,4 @@
 
 .checkin-hint {
   opacity: 0.6;
-}
-
-.remove-player-btn {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  opacity: 0.5;
-
-  ::ng-deep .mat-mdc-button-touch-target {
-    width: 36px;
-    height: 36px;
-  }
 }

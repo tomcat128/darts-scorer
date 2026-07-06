@@ -1,5 +1,5 @@
 import { Dart } from '../models/dart.model';
-import { GameModeConfig, MatchFormat } from '../models/match-config.model';
+import { CheckoutMode, GameModeConfig, MatchFormat } from '../models/match-config.model';
 import { RemovedPlayerRecord, ThrowEvent } from '../models/match-state.model';
 import { GameModeStrategy, TurnContext } from '../models/game-mode-strategy.model';
 import { X01Strategy } from './strategies/x01-strategy';
@@ -14,10 +14,13 @@ export interface TurnEvent {
   legIndex: number;
 }
 
-function createStrategy(gameConfig: GameModeConfig): GameModeStrategy<unknown> {
+function createStrategy(
+  gameConfig: GameModeConfig,
+  playerCheckoutModes: Record<string, CheckoutMode>,
+): GameModeStrategy<unknown> {
   switch (gameConfig.mode) {
     case 'x01':
-      return new X01Strategy(gameConfig);
+      return new X01Strategy(gameConfig, playerCheckoutModes);
     case 'cricket':
       return new CricketStrategy();
     case 'atc':
@@ -67,8 +70,9 @@ export class MatchEngine {
     playerIds: string[],
     throwLog: ThrowEvent[] = [],
     removedPlayers: RemovedPlayerRecord[] = [],
+    playerCheckoutModes: Record<string, CheckoutMode> = {},
   ) {
-    this.strategy = createStrategy(gameConfig);
+    this.strategy = createStrategy(gameConfig, playerCheckoutModes);
     this.playerIds = playerIds;
     this.activeIds = [...playerIds];
     this.format = format;

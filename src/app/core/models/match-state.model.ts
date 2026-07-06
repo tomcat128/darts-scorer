@@ -1,5 +1,5 @@
 import { Dart } from './dart.model';
-import { GameModeConfig, MatchFormat } from './match-config.model';
+import { CheckoutMode, GameModeConfig, MatchFormat } from './match-config.model';
 
 export interface ThrowEvent {
   dart: Dart;
@@ -30,6 +30,9 @@ export interface MatchSnapshot {
   playerIds: string[];
   throwLog: ThrowEvent[];
   removedPlayers?: RemovedPlayerRecord[];
+  /** Per-player override of the x01 checkout mode; falls back to gameConfig's mode when absent.
+   *  Reset by starting a new match (a fresh snapshot simply omits this field). */
+  playerCheckoutModes?: Record<string, CheckoutMode>;
   createdAt: number;
   completedAt?: number;
 }

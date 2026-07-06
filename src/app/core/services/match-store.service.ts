@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Dart } from '../models/dart.model';
 import { TurnEvent } from '../engine/match-engine';
-import { GameModeConfig, MatchFormat } from '../models/match-config.model';
+import { CheckoutMode, GameModeConfig, MatchFormat } from '../models/match-config.model';
 import { MatchSnapshot, RemovedPlayerRecord } from '../models/match-state.model';
 import { MatchEngine } from '../engine/match-engine';
 import { PersistenceService } from './persistence.service';
@@ -25,6 +25,7 @@ export class MatchStoreService {
       snapshot.playerIds,
       snapshot.throwLog,
       snapshot.removedPlayers ?? [],
+      snapshot.playerCheckoutModes ?? {},
     );
   });
 
@@ -41,6 +42,32 @@ export class MatchStoreService {
 
   hasActiveMatch(): boolean {
     return this.activeMatch() !== null;
+  }
+
+  /** The x01 checkout mode in effect for this player: their own override if set, else the match's configured default. */
+  playerCheckoutModeFor(playerId: string): CheckoutMode {
+    const snapshot = this.activeMatch();
+    if (!snapshot) {
+      return 'normal';
+    }
+    const override = snapshot.playerCheckoutModes?.[playerId];
+    if (override) {
+      return override;
+    }
+    return snapshot.gameConfig.mode === 'x01' ? snapshot.gameConfig.checkoutMode : 'normal';
+  }
+
+  /** Overrides one player's checkout mode for the rest of this match; reset by starting a new match. */
+  setPlayerCheckoutMode(playerId: string, mode: CheckoutMode): void {
+    const snapshot = this.activeMatch();
+    if (!snapshot) {
+      return;
+    }
+    this.activeMatch.set({
+      ...snapshot,
+      playerCheckoutModes: { ...(snapshot.playerCheckoutModes ?? {}), [playerId]: mode },
+    });
+    this.persist();
   }
 
   getDisplayState(playerId: string): unknown {
